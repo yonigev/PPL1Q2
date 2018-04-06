@@ -1,4 +1,7 @@
 import {map} from 'ramda';
+import {reduce} from 'ramda';
+import { Url } from 'url';
+
 const assert = require('assert');
 //-------------------Q2.1-------------------
 interface BinTree {
@@ -138,12 +141,7 @@ function testGPostOrder(){
 }
 
 //-------------------Q2.2-------------------
-
-function mapper(val,index,arr){
-    
-}
-
-const AllSubSets:(A:any[])=>any[]=function(A){
+const AllSubsets:(A:any[])=>any[]=function(A){
     let numOfSubSets=Math.pow(2,A.length);
     let i;      //I (in its binary form) would act as a mask for the array. (if the i'th bit is 1, take the i'th element into the subset)
     let toReturn=[]
@@ -160,16 +158,220 @@ const AllSubSets:(A:any[])=>any[]=function(A){
     }
     return toReturn;
 }
-const KSubsets:(A:any[],k:number)=>any[]=function(A,k){
-   return AllSubSets(A).filter(x=>x.length===k);
+const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
+    AllSubsets(A).filter(x=>x.length===k);
+
+function testKSubsets(){
+    assert.deepEqual([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3))
+    assert.deepEqual([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1))
+    assert.deepEqual([ [ 1, 2 ], [ 1, 3 ], [ 2, 3 ], [ 1, 4 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2))
+
+    
 }
+function testAllSubsets(){
+    let allFour=[ [],[ 1 ],[ 2 ],[ 1, 2 ], [ 3 ],    [ 1, 3 ],[ 2, 3 ], [ 1, 2, 3 ],[ 4 ],[ 1, 4 ],[ 2, 4 ],[ 1, 2, 4 ],[ 3, 4 ],[ 1, 3, 4 ],[ 2, 3, 4 ],[ 1, 2, 3, 4 ] ];
+    let allThree=[ [], [ 1 ], [ 2 ], [ 1, 2 ], [ 3 ], [ 1, 3 ], [ 2, 3 ], [ 1, 2, 3 ] ];
+    let allTwo=[ [], [ 1 ], [ 2 ], [ 1, 2 ] ];
+    assert.deepEqual(allFour, AllSubsets([1,2,3,4]))
+    assert.deepEqual(allThree, AllSubsets([1,2,3]))
+    assert.deepEqual(allTwo, AllSubsets([1,2]))
+}
+//-------------------Q2.3.1-------------------
+const flatmap:<T,U>(func:<T>(value:T)=>U[],array:T[])=>U[]=function(func,arr){
+     
+    return reduce((acc,curr)=>acc.concat(curr),[],map(func,arr));
+    
+}
+function testFlatMap(){
+    const func1=(x)=>x[0];
+    const func2=(x)=>[x[0]];
+    const func3=(x)=> x.concat(x);
+    assert.deepEqual(flatmap(func1,[[[1,2], [3,4]], [[5,6], [7,8]]]), [1,2,5,6]);
+    assert.deepEqual(flatmap(func2,[[[1,2], [3,4]], [[5,6], [7,8]]]), [[1,2],[5,6]]);
+    assert.deepEqual(flatmap(func3,[[[1,2], [3,4]], [[5,6], [7,8]]]), [ [ 1, 2 ],[ 3, 4 ],[ 1, 2 ],[ 3, 4 ], [ 5, 6 ], [ 7, 8 ],[ 5, 6 ],[ 7, 8 ] ]);
+}
+//-------------------Q2.3.2-------------------
+//interfaces - according to the example.
+interface bookmark{id:number;time:number};
+interface boxart{width:number;height:number;url:string};
+interface video{id:number;
+            title:string;
+            boxarts:boxart[];
+            url:string;
+            rating:number;
+            bookmark:bookmark[]}
+
+interface movielist{name:string;
+                    videos:video[]};
+
+interface custom_boxart{id:number;
+                        title:string;
+                        boxart:string};
 
 
 
+//Movie lists for testing
+const example_movielists1=[
+    {
+        name: "Instant Queue",
+        videos : [
+            {
+                "id": 70111470,
+                "title": "Die Hard",
+                "boxarts": [
+                    { width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" },
+                    { width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/DieHard200.jpg" }
+                ],
+                "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                "rating": 4.0,
+                "bookmark": []
+            },
+            {
+                "id": 654356453,
+                "title": "Bad Boys",
+                "boxarts": [
+                    { width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg" },
+                    { width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" }
+
+                ],
+                "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                "rating": 5.0,
+                "bookmark": [{ id: 432534, time: 65876586 }]
+            }
+        ]
+    },
+    {
+        name: "New Releases",
+        videos: [
+            {
+                "id": 65432445,
+                "title": "The Chamber",
+                "boxarts": [
+                    { width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
+                    { width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg" }
+                ],
+                "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                "rating": 4.0,
+                "bookmark": []
+            },
+            {
+                "id": 675465,
+                "title": "Fracture",
+                "boxarts": [
+                    { width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+                    { width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+                    { width: 300, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" }
+                ],
+                "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                "rating": 5.0,
+                "bookmark": [{ id: 432534, time: 65876586 }]
+            }
+        ]
+    }];
+
+const example_movielists2=[
+        {
+            name: "Instant Queue",
+            videos : [
+                {
+                    "id": 1,
+                    "title": "Movie1",
+                    "boxarts": [
+                        { width: 150, height: 200, url: "CorrectBoxArt" },
+                        { width: 200, height: 200, url: "IncorrectBoxArt" }
+                    ],
+                    "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                    "rating": 4.0,
+                    "bookmark": []
+                },
+                {
+                    "id": 2,
+                    "title": "Movie2",
+                    "boxarts": [
+                        { width: 200, height: 200, url: "IncorrectBoxArt" },
+                        { width: 150, height: 200, url: "CorrectBoxArt" }
+    
+                    ],
+                    "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                    "rating": 5.0,
+                    "bookmark": [{ id: 432534, time: 65876586 }]
+                }
+            ]
+        },
+        {
+            name: "New Releases",
+            videos: [
+                {
+                    "id": 3,
+                    "title": "Movie3",
+                    "boxarts": [
+                        { width: 150, height: 200, url: "CorrectBoxArt" },
+                        { width: 200, height: 200, url: "IncorrectBoxArt" }
+                    ],
+                    "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                    "rating": 4.0,
+                    "bookmark": []
+                },
+                {
+                    "id": 4,
+                    "title": "Movie4",
+                    "boxarts": [
+                        { width: 200, height: 200, url: "IncorrectBoxArt" },
+                        { width: 150, height: 200, url: "CorrectBoxArt" },
+                        { width: 300, height: 200, url: "IncorrectBoxArt" }
+                    ],
+                    "url": "http://api.netflix.com/catalog/titles/movies/70111470",
+                    "rating": 5.0,
+                    "bookmark": [{ id: 432534, time: 65876586 }]
+                }
+            ]
+        }];
+                        
 
 
+//Q 2.3.2
+const getBoxarts:(list:movielist[])=>custom_boxart[]=(list:movielist[])=>
+        flatmap((x:any)=>x.videos,list)                                     //get only the videos from all movie listS
+        .map((x:video)=>({id:x.id,title:x.title,                            //for every video, place a new type (custom_boxart)
+            boxart:reduce((acc:boxart,curr:boxart)=>curr.url,'',            //reduce the array of boxarts (strings) into one. (we assume one. boxart with dimensions 150 X 200 )
+                x.boxarts.filter(x=>(x.width===150 && x.height===200)))})); //filter all boxarts, leave only those with 150 X 200 dimensions.
+            
+//test getBoxarts()
+function testGetBoxarts(){
+    let output1:custom_boxart[]=getBoxarts(example_movielists1);
+    let output2:custom_boxart[]=getBoxarts(example_movielists2);
+    const expectedOutput1:custom_boxart[]=[{ id: 70111470,
+        title: 'Die Hard',
+        boxart: 'http://cdn-0.nflximg.com/images/2891/DieHard150.jpg' },
+      { id: 654356453,
+        title: 'Bad Boys',
+        boxart: 'http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg' },
+      { id: 65432445,
+        title: 'The Chamber',
+        boxart: 'http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg' },
+      { id: 675465,
+        title: 'Fracture',
+        boxart: 'http://cdn-0.nflximg.com/images/2891/Fracture150.jpg' } ];
+    const expectedOutput2:custom_boxart[]=[
+        {   id:1,
+            title:'Movie1',
+            boxart:'CorrectBoxArt'},
+        {   id:2,
+            title:'Movie2',
+            boxart:'CorrectBoxArt'},
+        {   id:3,
+            title:'Movie3',
+            boxart:'CorrectBoxArt'},
+        {   id:4,
+            title:'Movie4',
+            boxart:'CorrectBoxArt'}];
 
-
+        //assert correct output for both examples
+        assert.deepEqual(output1,expectedOutput1);
+        assert.deepEqual(output2,expectedOutput2);
+        //assert correct box art "url" for example 2.
+        assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt')
+}
 
 //test numeric trees
 testPreOrder();
@@ -179,5 +381,11 @@ testPostOrder();
 testGPreOrder();
 testGInOrder();
 testGPostOrder();
-console.log(KSubsets([1,2,3,4],2));
+//test KSubsets
+testKSubsets();
+testAllSubsets();
+//test flatmap and getBoxarts
+testFlatMap();
+testGetBoxarts();
+
 
