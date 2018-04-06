@@ -140,7 +140,7 @@ function testGPostOrder(){
     assert.deepEqual(['d','e','b','c','a'],gen_t3Post)
 }
 
-//-------------------Q2.2-------------------
+//-------------------Q2.2-------------------f
 const AllSubsets:(A:any[])=>any[]=function(A){
     let numOfSubSets=Math.pow(2,A.length);
     let i;      //I (in its binary form) would act as a mask for the array. (if the i'th bit is 1, take the i'th element into the subset)
@@ -158,13 +158,27 @@ const AllSubsets:(A:any[])=>any[]=function(A){
     }
     return toReturn;
 }
+
+//Recursive version.
 const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
-    AllSubsets(A).filter(x=>x.length===k);
+    KSubsetREC(A,[],k);
+const KSubsetREC:(A:any[],ret:any[],k:number)=>any[]=(A,ret,k)=>{
+    if(k===0)
+        return[ret];
+    else if(k>A.length || A.length===0)
+        return [];
+    //    take the first element and continue recursion                    ,   don't take the first element, and continue recursion
+    return [...KSubsetREC(A.filter((x)=>A.indexOf(x)!=0),[...ret,A[0]],k-1),...KSubsetREC(A.filter((x)=>A.indexOf(x)!=0),[...ret],k)];
+    
+}
+//older version of KSubsets
+// const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
+//     AllSubsets(A).filter(x=>x.length===k);
 
 function testKSubsets(){
     assert.deepEqual([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3))
     assert.deepEqual([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1))
-    assert.deepEqual([ [ 1, 2 ], [ 1, 3 ], [ 2, 3 ], [ 1, 4 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2))
+    assert.deepEqual([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2))
 
     
 }
@@ -336,6 +350,8 @@ const getBoxarts:(list:movielist[])=>custom_boxart[]=(list:movielist[])=>
             boxart:reduce((acc:boxart,curr:boxart)=>curr.url,'',            //reduce the array of boxarts (strings) into one. (we assume one. boxart with dimensions 150 X 200 )
                 x.boxarts.filter(x=>(x.width===150 && x.height===200)))})); //filter all boxarts, leave only those with 150 X 200 dimensions.
             
+const getBoxArts=getBoxarts;    //in case there's a typo in the instructions. (getBoxArts & getBoxarts)
+
 //test getBoxarts()
 function testGetBoxarts(){
     let output1:custom_boxart[]=getBoxarts(example_movielists1);
@@ -372,7 +388,6 @@ function testGetBoxarts(){
         //assert correct box art "url" for example 2.
         assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt')
 }
-
 //test numeric trees
 testPreOrder();
 testInOrder();
