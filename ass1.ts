@@ -1,6 +1,5 @@
 import {map} from 'ramda';
 import {reduce} from 'ramda';
-import { Url } from 'url';
 
 const assert = require('assert');
 //-------------------Q2.1-------------------
@@ -141,34 +140,51 @@ function testGPostOrder(){
 }
 
 //-------------------Q2.2-------------------f
-const AllSubsets:(A:any[])=>any[]=function(A){
-    let numOfSubSets=Math.pow(2,A.length);
-    let i;      //I (in its binary form) would act as a mask for the array. (if the i'th bit is 1, take the i'th element into the subset)
-    let toReturn=[]
-    for(i=0; i<numOfSubSets; i++){
-        let subset=[];
-        let j;
-        for(j=0; j<A.length; j++){
-            let currIndex=Math.pow(2,j);
+const AllSubsets:(A:any[])=>any[]=(A)=>
+    AllSubsetsR(A,A.length);
 
-            if(Math.floor(i/(currIndex)) % 2 === 1)
-                subset=subset.concat(A[j]);
-        }
-        toReturn.push(subset);
-    }
-    return toReturn;
+const AllSubsetsR:(A:any[],k:number)=>any[]=function(A,k){
+    if(k<0)
+        return[];
+    return [...KSubsets(A,A.length-k),...AllSubsetsR(A,k-1)];
 }
 
+function array_contains(A:any[], element:any){
+    let i;
+    for(i=0; i<A.length; i++){
+        if(A[i]===element)
+            return true;
+        if(A[i] instanceof Array && equalSets(A[i],element))
+            return true;
+
+        
+    }
+    
+    return false;
+}
+//returns true if all elements in array A exist in array B and B's elements in A. (assuming no recurring values)
+function equalSets(A:any[],B:any[]){
+    let i;
+    let j;
+    if(A.length === B.length){
+        for(i=0; i<A.length; i++){
+            if(!(array_contains(B,A[i]) && array_contains(A,B[i])))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
 //Recursive version.
 const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
-    KSubsetREC(A,[],k);
-const KSubsetREC:(A:any[],ret:any[],k:number)=>any[]=(A,ret,k)=>{
+    KSubsetR(A,[],k);
+const KSubsetR:(A:any[],ret:any[],k:number)=>any[]=(A,ret,k)=>{
     if(k===0)
         return[ret];
     else if(k>A.length || A.length===0)
         return [];
     //    take the first element and continue recursion                    ,   don't take the first element, and continue recursion
-    return [...KSubsetREC(A.filter((x)=>A.indexOf(x)!=0),[...ret,A[0]],k-1),...KSubsetREC(A.filter((x)=>A.indexOf(x)!=0),[...ret],k)];
+    return [...KSubsetR(A.filter((x)=>A.indexOf(x)!=0),[...ret,A[0]],k-1),...KSubsetR(A.filter((x)=>A.indexOf(x)!=0),[...ret],k)];
     
 }
 //older version of KSubsets
@@ -176,9 +192,9 @@ const KSubsetREC:(A:any[],ret:any[],k:number)=>any[]=(A,ret,k)=>{
 //     AllSubsets(A).filter(x=>x.length===k);
 
 function testKSubsets(){
-    assert.deepEqual([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3))
-    assert.deepEqual([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1))
-    assert.deepEqual([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2))
+    assert.ok(equalSets([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3)));
+    assert.ok(equalSets([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1)));
+    assert.ok(equalSets([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2)));
 
     
 }
@@ -186,10 +202,12 @@ function testAllSubsets(){
     let allFour=[ [],[ 1 ],[ 2 ],[ 1, 2 ], [ 3 ],    [ 1, 3 ],[ 2, 3 ], [ 1, 2, 3 ],[ 4 ],[ 1, 4 ],[ 2, 4 ],[ 1, 2, 4 ],[ 3, 4 ],[ 1, 3, 4 ],[ 2, 3, 4 ],[ 1, 2, 3, 4 ] ];
     let allThree=[ [], [ 1 ], [ 2 ], [ 1, 2 ], [ 3 ], [ 1, 3 ], [ 2, 3 ], [ 1, 2, 3 ] ];
     let allTwo=[ [], [ 1 ], [ 2 ], [ 1, 2 ] ];
-    assert.deepEqual(allFour, AllSubsets([1,2,3,4]))
-    assert.deepEqual(allThree, AllSubsets([1,2,3]))
-    assert.deepEqual(allTwo, AllSubsets([1,2]))
+    assert.ok(equalSets(allFour, AllSubsets([1,2,3,4])));
+    assert.ok(equalSets(allThree, AllSubsets([1,2,3])));
+    assert.ok(equalSets(allTwo, AllSubsets([1,2])));
 }
+
+
 //-------------------Q2.3.1-------------------
 const flatmap:<T,U>(func:<T>(value:T)=>U[],array:T[])=>U[]=function(func,arr){
      
@@ -402,5 +420,4 @@ testAllSubsets();
 //test flatmap and getBoxarts
 testFlatMap();
 testGetBoxarts();
-
 
