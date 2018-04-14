@@ -15,17 +15,18 @@ interface GBinTree<T> {
     right?: GBinTree<T>;
 };
 
+
 let t1:BinTree={root:30, 
     right:{ root:322,
             left:{root:54,left:{root:33,right:{root:41}}, right:{root:65,right:{root:66}}}},
     left:{root:12,right:{root:22},left:{root:1,right:{root:2,right:{root:4,left:{root:2}}}}}};
 let t2:BinTree={root:1, 
-                right:{ root:3},
-                left:{root:2,right:{root:5},left:{root:4}}};
-        
+    right:{ root:3},
+    left:{root:2,right:{root:5},left:{root:4}}};
 let t3:BinTree={root:1, 
-                right:{ root:13,right:{root:34},left:{root:21}},
-                left:{root:1,right:{root:8},left:{root:2,right:{root:5},left:{root:3}}}};
+    right:{ root:13,right:{root:34},left:{root:21}},
+    left:{root:1,right:{root:8},left:{root:2,right:{root:5},left:{root:3}}}};
+
 let gen_t1:GBinTree<string>={root:'abc', 
                 right:{ root:'def'},
                 left:{root:'ghi',right:{root:'jkl'},left:{root:'mnop'}}};
@@ -78,71 +79,63 @@ const GBinTreePostArray:<T>(t:GBinTree<T>)=>T[]=(t)=>
     [].concat(GBinTreePostArray(t.left)).concat(GBinTreePostArray(t.right).concat(t.root));
 
 
-function testPreOrder(){
-    
-    
-    const t1Pre=TreePreArray(t1);
-    const t2Pre=TreePreArray(t2);
-    const t3Pre=TreePreArray(t3);
-
-    assert.deepEqual([30,12,1,2,4,2,22,322,54,33,41,65,66],t1Pre);
-    assert.deepEqual([1,2,4,5,3],t2Pre);
-    assert.deepEqual([1,1,2,3,5,8,13,21,34],t3Pre);
+function testPreOrder1():boolean{
+    assert.deepEqual([30,12,1,2,4,2,22,322,54,33,41,65,66],TreePreArray(t1));
     return true;
 }
+function testPreOrder2():boolean{
+    assert.deepEqual([1,2,4,5,3],TreePreArray(t2));
+    return true;
+}
+
+function testPreOrder3():boolean{
+    assert.deepEqual([1,1,2,3,5,8,13,21,34],TreePreArray(t3));
+    return true;
+
+}
+function testPreOrder():boolean{
+    return testPreOrder1() && testPreOrder2() && testPreOrder3();
+}
+function testInOrder1():boolean{ assert.deepEqual([1,2,2,4,12,22,30,33,41,54,65,66,322],TreeInArray(t1)); return true;}
+function testInOrder2():boolean{    assert.deepEqual([4,2,5,1,3],TreeInArray(t2)); return true;}
+
+function testInOrder3():boolean{    assert.deepEqual([3,2,5,1,8,1,21,13,34],TreeInArray(t3)); return true;}
 function testInOrder(){
-    
-    
-    const t1In=TreeInArray(t1);
-    const t2In=TreeInArray(t2);
-    const t3In=TreeInArray(t3);
-
-    assert.deepEqual([1,2,2,4,12,22,30,33,41,54,65,66,322],t1In);
-    assert.deepEqual([4,2,5,1,3],t2In);
-    assert.deepEqual([3,2,5,1,8,1,21,13,34],t3In);
-    return true;
+   return testInOrder1 && testInOrder2 && testInOrder3;
 }
-function testPostOrder(){
-    const t1Post=TreePostArray(t1);
-    const t2Post=TreePostArray(t2);
-    const t3Post=TreePostArray(t3);
-    assert.deepEqual([2,4,2,1,22,12,41,33,66,65,54,322,30],t1Post);
-    assert.deepEqual([4,5,2,3,1],t2Post);
-    assert.deepEqual([3,5,2,8,1,21,34,13,1],t3Post);
-    return true;
+
+
+function testPostOrder1():boolean{
+    assert.deepEqual([2,4,2,1,22,12,41,33,66,65,54,322,30],TreePostArray(t1)); return true;}
+function testPostOrder2():boolean{
+    assert.deepEqual([4,5,2,3,1],TreePostArray(t2)); return true;}
+function testPostOrder3():boolean{    assert.deepEqual([3,5,2,8,1,21,34,13,1],TreePostArray(t3)); return true;}
+function testPostOrder():boolean{
+   return testPostOrder1() && testPostOrder2() && testPostOrder3();
 }   
-function testGPreOrder(){
-    
-    
-    const gen_t1Pre=GBinTreePreArray(gen_t1);
-    const gen_t2Pre=GBinTreePreArray(gen_t2);
-    const gen_t3Pre=GBinTreePreArray(gen_t3);
 
-    assert.deepEqual(['abc','ghi','mnop','jkl','def'],gen_t1Pre);
-    assert.deepEqual([true,false,true,false,false],gen_t2Pre);
-    assert.deepEqual(['a','b','d','e','c'],gen_t3Pre);
-    return true;
+function testGPreOrder1():boolean{    assert.deepEqual(['abc','ghi','mnop','jkl','def'],GBinTreePreArray(gen_t1)); return true;}
+function testGPreOrder2():boolean{    assert.deepEqual([true,false,true,false,false],GBinTreePreArray(gen_t2)); return true;}
+function testGPreOrder3():boolean{    assert.deepEqual(['a','b','d','e','c'],GBinTreePreArray(gen_t3)); return true;}
+
+
+function testGPreOrder():boolean{
+    return testGPreOrder1() && testGPreOrder2() && testGPreOrder3();
 }
 
-function testGInOrder(){
-    const gen_t1In=GBinTreeInArray(gen_t1);
-    const gen_t2In=GBinTreeInArray(gen_t2);
-    const gen_t3In=GBinTreeInArray(gen_t3);
-    assert.deepEqual(['mnop','ghi','jkl','abc','def'],gen_t1In);
-    assert.deepEqual([true,false,false,true,false],gen_t2In);
-    assert.deepEqual(['d','b','e','a','c'],gen_t3In);
-    return true;
+function testGInOrder1():boolean{    assert.deepEqual(['mnop','ghi','jkl','abc','def'],GBinTreeInArray(gen_t1)); return true;}
+function testGInOrder2():boolean{    assert.deepEqual([true,false,false,true,false],GBinTreeInArray(gen_t2)); return true;}
+function testGInOrder3():boolean{    assert.deepEqual(['d','b','e','a','c'],GBinTreeInArray(gen_t3)); return true;}
+function testGInOrder():boolean{
+    return testGInOrder1() && testGInOrder2() && testGInOrder3();
 }
-function testGPostOrder(){
-    
-    const gen_t1Post=GBinTreePostArray(gen_t1);
-    const gen_t2Post=GBinTreePostArray(gen_t2);
-    const gen_t3Post=GBinTreePostArray(gen_t3);
 
-    assert.deepEqual(['mnop','jkl','ghi','def','abc'],gen_t1Post);
-    assert.deepEqual([true,false,false,false,true],gen_t2Post);
-    assert.deepEqual(['d','e','b','c','a'],gen_t3Post);
-    return true;
+function testGPostOrder1():boolean{    assert.deepEqual(['mnop','jkl','ghi','def','abc'],GBinTreePostArray(gen_t1)); return true;}
+function testGPostOrder2():boolean{    assert.deepEqual([true,false,false,false,true],GBinTreePostArray(gen_t2)); return true;}
+function testGPostOrder3():boolean{    assert.deepEqual(['d','e','b','c','a'],GBinTreePostArray(gen_t3)); return true;}
+function testGPostOrder():boolean{
+    
+   return testGPostOrder1()&&testGPostOrder2()&&testGPostOrder3();
 }
 
 //-------------------Q2.2-------------------f
@@ -197,22 +190,31 @@ const KSubsetR:<T>(A:T[],ret:T[],k:number)=>T[][]=(A,ret,k)=>{
 // const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
 //     AllSubsets(A).filter(x=>x.length===k);
 
-function testKSubsets(){
+function testKSubsets1():boolean{
     assert.ok(equalSets([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3)));
-    assert.ok(equalSets([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1)));
-    assert.ok(equalSets([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2)));
-    return true;
-
-    
+    return true;}
+function testKSubsets2():boolean{    assert.ok(equalSets([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1))); return true;}
+function testKSubsets3():boolean{    assert.ok(equalSets([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2))); return true;}
+function testKSubsets():boolean{
+    return testKSubsets1() && testKSubsets2() && testKSubsets3();
 }
-function testAllSubsets(){
+function testAllSubsets1():boolean{ 
     let allFour=[ [],[ 1 ],[ 2 ],[ 1, 2 ], [ 3 ],    [ 1, 3 ],[ 2, 3 ], [ 1, 2, 3 ],[ 4 ],[ 1, 4 ],[ 2, 4 ],[ 1, 2, 4 ],[ 3, 4 ],[ 1, 3, 4 ],[ 2, 3, 4 ],[ 1, 2, 3, 4 ] ];
+    assert.ok(equalSets(allFour, AllSubsets([1,2,3,4]))); 
+    return true;}
+
+function testAllSubsets2():boolean{   
     let allThree=[ [], [ 1 ], [ 2 ], [ 1, 2 ], [ 3 ], [ 1, 3 ], [ 2, 3 ], [ 1, 2, 3 ] ];
-    let allTwo=[ [], [ 1 ], [ 2 ], [ 1, 2 ] ];
-    assert.ok(equalSets(allFour, AllSubsets([1,2,3,4])));
     assert.ok(equalSets(allThree, AllSubsets([1,2,3])));
+    return true;
+}
+function testAllSubsets3():boolean{
+    let allTwo=[ [], [ 1 ], [ 2 ], [ 1, 2 ] ];
     assert.ok(equalSets(allTwo, AllSubsets([1,2])));
     return true;
+}
+function testAllSubsets():boolean{
+   return testAllSubsets1() && testAllSubsets2() && testAllSubsets3();
 }
 
 
@@ -222,14 +224,25 @@ const flatmap:<T,U>(func:<T>(value:T)=>U[],array:T[])=>U[]=function(func,arr){
     return reduce((acc,curr)=>acc.concat(curr),[],map(func,arr));
     
 }
-function testFlatMap(){
+
+
+function testFlatMap1():boolean{ 
     const func1=(x)=>x[0];
-    const func2=(x)=>[x[0]];
-    const func3=(x)=> x.concat(x);
     assert.deepEqual(flatmap(func1,[[[1,2], [3,4]], [[5,6], [7,8]]]), [1,2,5,6]);
+    return true;
+}
+function testFlatMap2():boolean{
+    const func2=(x)=>[x[0]];
     assert.deepEqual(flatmap(func2,[[[1,2], [3,4]], [[5,6], [7,8]]]), [[1,2],[5,6]]);
+    return true;
+}
+function testFlatMap3():boolean{
+    const func3=(x)=> x.concat(x);
     assert.deepEqual(flatmap(func3,[[[1,2], [3,4]], [[5,6], [7,8]]]), [ [ 1, 2 ],[ 3, 4 ],[ 1, 2 ],[ 3, 4 ], [ 5, 6 ], [ 7, 8 ],[ 5, 6 ],[ 7, 8 ] ]);
     return true;
+}
+function testFlatMap():boolean{
+    return testFlatMap1() && testFlatMap2() && testFlatMap3();
 }
 //-------------------Q2.3.2-------------------
 //interfaces - according to the example.
@@ -380,9 +393,8 @@ const getBoxarts:(list:movielist[])=>custom_boxart[]=(list:movielist[])=>
 const getBoxArts=getBoxarts;    //in case there's a typo in the instructions. (getBoxArts & getBoxarts)
 
 //test getBoxarts()
-function testGetBoxarts(){
+function testGetBoxarts1():boolean{
     let output1:custom_boxart[]=getBoxarts(example_movielists1);
-    let output2:custom_boxart[]=getBoxarts(example_movielists2);
     const expectedOutput1:custom_boxart[]=[{ id: 70111470,
         title: 'Die Hard',
         boxart: 'http://cdn-0.nflximg.com/images/2891/DieHard150.jpg' },
@@ -395,8 +407,12 @@ function testGetBoxarts(){
       { id: 675465,
         title: 'Fracture',
         boxart: 'http://cdn-0.nflximg.com/images/2891/Fracture150.jpg' } ];
+    assert.deepEqual(output1,expectedOutput1);
+    return true;
+}
+function testGetBoxarts2():boolean{
+    let output2:custom_boxart[]=getBoxarts(example_movielists2);
     const expectedOutput2:custom_boxart[]=[
-        
         {   id:1,
             title:'Movie1',
             boxart:'CorrectBoxArt'},
@@ -409,17 +425,17 @@ function testGetBoxarts(){
         {   id:4,
             title:'Movie4',
             boxart:'CorrectBoxArt'}];
+            assert.deepEqual(output2,expectedOutput2);
+            return true;
 
-        //assert correct output for both examples
-        assert.deepEqual(output1,expectedOutput1);
-        assert.deepEqual(output2,expectedOutput2);
-        //assert correct box art "url" for example 2.
-        assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt');
-        return true;// v
-
-
-
-
+}
+function testGetBoxarts3():boolean{
+    let output2:custom_boxart[]=getBoxarts(example_movielists2);
+    assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt');
+    return true;
+}
+function testGetBoxarts():boolean{
+    return testGetBoxarts1() &&testGetBoxarts2() && testGetBoxarts3();
     }
 //test numeric trees
 testPreOrder();
