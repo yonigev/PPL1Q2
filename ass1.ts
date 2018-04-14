@@ -87,7 +87,8 @@ function testPreOrder(){
 
     assert.deepEqual([30,12,1,2,4,2,22,322,54,33,41,65,66],t1Pre);
     assert.deepEqual([1,2,4,5,3],t2Pre);
-    assert.deepEqual([1,1,2,3,5,8,13,21,34],t3Pre)
+    assert.deepEqual([1,1,2,3,5,8,13,21,34],t3Pre);
+    return true;
 }
 function testInOrder(){
     
@@ -98,7 +99,8 @@ function testInOrder(){
 
     assert.deepEqual([1,2,2,4,12,22,30,33,41,54,65,66,322],t1In);
     assert.deepEqual([4,2,5,1,3],t2In);
-    assert.deepEqual([3,2,5,1,8,1,21,13,34],t3In)
+    assert.deepEqual([3,2,5,1,8,1,21,13,34],t3In);
+    return true;
 }
 function testPostOrder(){
     const t1Post=TreePostArray(t1);
@@ -106,7 +108,8 @@ function testPostOrder(){
     const t3Post=TreePostArray(t3);
     assert.deepEqual([2,4,2,1,22,12,41,33,66,65,54,322,30],t1Post);
     assert.deepEqual([4,5,2,3,1],t2Post);
-    assert.deepEqual([3,5,2,8,1,21,34,13,1],t3Post)
+    assert.deepEqual([3,5,2,8,1,21,34,13,1],t3Post);
+    return true;
 }   
 function testGPreOrder(){
     
@@ -117,7 +120,8 @@ function testGPreOrder(){
 
     assert.deepEqual(['abc','ghi','mnop','jkl','def'],gen_t1Pre);
     assert.deepEqual([true,false,true,false,false],gen_t2Pre);
-    assert.deepEqual(['a','b','d','e','c'],gen_t3Pre)
+    assert.deepEqual(['a','b','d','e','c'],gen_t3Pre);
+    return true;
 }
 
 function testGInOrder(){
@@ -126,7 +130,8 @@ function testGInOrder(){
     const gen_t3In=GBinTreeInArray(gen_t3);
     assert.deepEqual(['mnop','ghi','jkl','abc','def'],gen_t1In);
     assert.deepEqual([true,false,false,true,false],gen_t2In);
-    assert.deepEqual(['d','b','e','a','c'],gen_t3In)
+    assert.deepEqual(['d','b','e','a','c'],gen_t3In);
+    return true;
 }
 function testGPostOrder(){
     
@@ -136,7 +141,8 @@ function testGPostOrder(){
 
     assert.deepEqual(['mnop','jkl','ghi','def','abc'],gen_t1Post);
     assert.deepEqual([true,false,false,false,true],gen_t2Post);
-    assert.deepEqual(['d','e','b','c','a'],gen_t3Post)
+    assert.deepEqual(['d','e','b','c','a'],gen_t3Post);
+    return true;
 }
 
 //-------------------Q2.2-------------------f
@@ -176,9 +182,9 @@ function equalSets(A:any[],B:any[]){
     return false;
 }
 //Recursive version.
-const KSubsets:(A:any[],k:number)=>any[]=(A,k)=>
+const KSubsets:<T>(A:T[],k:number)=>T[][]=(A,k)=>
     KSubsetR(A,[],k);
-const KSubsetR:(A:any[],ret:any[],k:number)=>any[]=(A,ret,k)=>{
+const KSubsetR:<T>(A:T[],ret:T[],k:number)=>T[][]=(A,ret,k)=>{
     if(k===0)
         return[ret];
     else if(k>A.length || A.length===0)
@@ -195,6 +201,7 @@ function testKSubsets(){
     assert.ok(equalSets([ [ 1, 2, 3 ], [ 1, 2, 4 ], [ 1, 3, 4 ], [ 2, 3, 4 ] ], KSubsets([1,2,3,4],3)));
     assert.ok(equalSets([ [ 1 ], [ 2 ], [ 3 ], [ 4 ] ], KSubsets([1,2,3,4],1)));
     assert.ok(equalSets([ [ 1, 2 ], [ 1, 3 ], [ 1, 4], [ 2, 3 ], [ 2, 4 ], [ 3, 4 ] ], KSubsets([1,2,3,4],2)));
+    return true;
 
     
 }
@@ -205,6 +212,7 @@ function testAllSubsets(){
     assert.ok(equalSets(allFour, AllSubsets([1,2,3,4])));
     assert.ok(equalSets(allThree, AllSubsets([1,2,3])));
     assert.ok(equalSets(allTwo, AllSubsets([1,2])));
+    return true;
 }
 
 
@@ -221,6 +229,7 @@ function testFlatMap(){
     assert.deepEqual(flatmap(func1,[[[1,2], [3,4]], [[5,6], [7,8]]]), [1,2,5,6]);
     assert.deepEqual(flatmap(func2,[[[1,2], [3,4]], [[5,6], [7,8]]]), [[1,2],[5,6]]);
     assert.deepEqual(flatmap(func3,[[[1,2], [3,4]], [[5,6], [7,8]]]), [ [ 1, 2 ],[ 3, 4 ],[ 1, 2 ],[ 3, 4 ], [ 5, 6 ], [ 7, 8 ],[ 5, 6 ],[ 7, 8 ] ]);
+    return true;
 }
 //-------------------Q2.3.2-------------------
 //interfaces - according to the example.
@@ -404,7 +413,8 @@ function testGetBoxarts(){
         assert.deepEqual(output1,expectedOutput1);
         assert.deepEqual(output2,expectedOutput2);
         //assert correct box art "url" for example 2.
-        assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt')
+        assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt');
+        return true;// v
 }
 //test numeric trees
 testPreOrder();
@@ -420,4 +430,3 @@ testAllSubsets();
 //test flatmap and getBoxarts
 testFlatMap();
 testGetBoxarts();
-
