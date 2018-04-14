@@ -146,21 +146,21 @@ function testGPostOrder(){
 }
 
 //-------------------Q2.2-------------------f
-const AllSubsets:(A:any[])=>any[]=(A)=>
+const AllSubsets:<T>(A:T[])=>T[][]=(A)=>
     AllSubsetsR(A,A.length);
 
-const AllSubsetsR:(A:any[],k:number)=>any[]=function(A,k){
+const AllSubsetsR:<T>(A:T[],k:number)=>T[][]=function(A,k){
     if(k<0)
         return[];
     return [...KSubsets(A,A.length-k),...AllSubsetsR(A,k-1)];
 }
 
-function array_contains(A:any[], element:any){
+function array_contains<T>(A:T[]|T[][], element:T){
     let i;
     for(i=0; i<A.length; i++){
         if(A[i]===element)
             return true;
-        if(A[i] instanceof Array && equalSets(A[i],element))
+        if(A[i] instanceof Array && element instanceof Array && equalSets(<T[]>A[i],element))
             return true;
 
         
@@ -169,7 +169,7 @@ function array_contains(A:any[], element:any){
     return false;
 }
 //returns true if all elements in array A exist in array B and B's elements in A. (assuming no recurring values)
-function equalSets(A:any[],B:any[]){
+function equalSets<T>(A:T[],B:T[]){
     let i;
     let j;
     if(A.length === B.length){
@@ -372,7 +372,7 @@ const example_movielists2=[
 
 //Q 2.3.2
 const getBoxarts:(list:movielist[])=>custom_boxart[]=(list:movielist[])=>
-        flatmap((x:any)=>x.videos,list)                                     //get only the videos from all movie listS
+        flatmap(<movielist>(x)=>x.videos,list)                                     //get only the videos from all movie listS
         .map((x:video)=>({id:x.id,title:x.title,                            //for every video, place a new type (custom_boxart)
             boxart:reduce((acc:boxart,curr:boxart)=>curr.url,'',            //reduce the array of boxarts (strings) into one. (we assume one. boxart with dimensions 150 X 200 )
                 x.boxarts.filter(x=>(x.width===150 && x.height===200)))})); //filter all boxarts, leave only those with 150 X 200 dimensions.
@@ -396,6 +396,7 @@ function testGetBoxarts(){
         title: 'Fracture',
         boxart: 'http://cdn-0.nflximg.com/images/2891/Fracture150.jpg' } ];
     const expectedOutput2:custom_boxart[]=[
+        
         {   id:1,
             title:'Movie1',
             boxart:'CorrectBoxArt'},
@@ -415,7 +416,11 @@ function testGetBoxarts(){
         //assert correct box art "url" for example 2.
         assert.ok(output2[0].boxart==='CorrectBoxArt' && output2[1].boxart==='CorrectBoxArt' && output2[2].boxart==='CorrectBoxArt' && output2[3].boxart==='CorrectBoxArt');
         return true;// v
-}
+
+
+
+
+    }
 //test numeric trees
 testPreOrder();
 testInOrder();
